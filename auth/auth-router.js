@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const bcrypt = require('bcryptjs');//hashes password
+//JSON web token
+const jwt = require("jsonwebtoken");
 const db = require('../database/dbConfig.js');//database with "users" table i will "post" to
 const {isValid} = require('./isValid.js');
 
@@ -34,10 +36,15 @@ router.post('/login', (req, res) => {
   const {username, password} = req.body;
   console.log("username: ", username)
   if(isValid(req.body)){
-    db('users')
-      .then(user=>{
-        console.log("user: ",user.length)
-        res.status(201).json(user)
+    db('users').where({username})
+      .then(([user])=>{
+        // console.log("user: ",user)
+        if(user && bcrypt.compareSync(password, user.password)){
+          const token = generateToken(user);
+          res.status(200).json({ username: user.username, token });
+        }else{
+          res.status(401).json({errorMessage: "Invalid Credentials"});
+        }
       })
       .catch((err) => {
         res.status(500).json({ errorMessage: "there was an error",error:err.message });
@@ -46,6 +53,19 @@ router.post('/login', (req, res) => {
     res.status(400).json({ errorMessage: "Please provide username, password" });
   }
 });
+
+
+
+function generateToken(user) {
+  const payload = {
+    user: user.username,
+  };
+  const options = {
+    expiresIn: "1h",
+  };
+  const secret = 'very secret secret';
+  return jwt.sign(payload, secret,options);
+}
 
 module.exports = router;
 // function findBy(filter){
