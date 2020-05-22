@@ -1,12 +1,13 @@
+const request = require('supertest');
 const authRouter = require('./auth-router.js');
 
-describe('auth-router.js tests', ()=> {
-    describe('/register tests', ()=>{
-        it.todo('log user from /register endpoint')
-        it.todo('check to see if password is valid or something')
+
+describe('auth-router.js tests',() => {
+    it('should return hello world', ()=>{
+        return request(authRouter).get('/helloWorld')
+            .then(res =>{
+                console.log("res.body in authRouter test:", res.body)
+                expect(res.body).toBe("hello world")
+            })
     })
-    describe('/login tests', ()=> {
-        it.todo('you got this!')
-    })
-    
 })

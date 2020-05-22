@@ -8,11 +8,18 @@ const jokesRouter = require('../jokes/jokes-router.js');
 
 const server = express();
 
+server.get('/', (req,res) => {
+    // console.log('GET / log')
+    res.json("hello world");
+})
+
 server.use(helmet());
 server.use(cors());
 server.use(express.json());
 
 server.use('/api/auth', authRouter);
 server.use('/api/jokes', authenticate, jokesRouter);
+
+
 
 module.exports = server;
