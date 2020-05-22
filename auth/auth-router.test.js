@@ -32,4 +32,22 @@ describe('auth-router.js tests',() => {
         const users = await db('users');
         expect(users).toHaveLength(3);
     })
+
+    //test #1 for /login endpoint
+    it('should give me some json data', ()=> {
+        return request(server).post('/api/auth/login')
+            .expect('Content-Type', /json/)
+    })
+    //test #2 for /login endpoint
+    it('should check db for user named david', ()=>{
+        db('users').where('id', 1)
+            .then(([res]) =>{
+                // console.log("res", res.username)
+                expect(res.username).toBe("david")
+            })
+        // return request(server).post('/api/auth/login')
+        //     .then(res => {
+
+        //     })
+    })
 })
