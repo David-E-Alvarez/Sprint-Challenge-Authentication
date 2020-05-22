@@ -6,8 +6,7 @@ const db = require('../database/dbConfig.js');//database with "users" table i wi
 const {isValid} = require('./isValid.js');
 
 router.get('/helloWorld', (req,res) => {
-  console.log('GET / log')
-  res.json("hello world");
+  res.json("hello world!");
 })
 
 router.post('/register', (req, res) => {
